@@ -12,8 +12,9 @@ type List[E comparable] interface {
 	// CopyOf returns an unmodifiable List containing the elements of the given Collection, in its iteration order.
 	CopyOf(collection Collection[E]) List[E]
 
-	// Get returns the element at the specified position in this list.
-	Get(index int)
+	// Get returns the element at the specified position in this list and true if the position exists.
+	// Otherwise, returns the zero value and false.
+	Get(index int) (E, bool)
 
 	// IndexOf returns true if this list contains no elements.
 	IndexOf(element E) int
