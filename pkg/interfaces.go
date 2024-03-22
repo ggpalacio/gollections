@@ -6,14 +6,6 @@ type Iterator[T any] interface {
 	Remove()
 }
 
-type Predicate[T any] interface {
-	Test(value T) bool
-}
-
-type Comparator[T any] interface {
-	Compare(value1, value2 T) int
-}
-
 type Collection[T any] interface {
 	Add(element T, elements ...T)
 	AddAll(collection Collection[T])
@@ -45,4 +37,8 @@ type List[T any] interface {
 	Set(index int, element T)
 	Sort(comparator Comparator[T])
 	SubList(fromIndex, toIndex int)
+}
+
+type Set[T comparable] interface {
+	Collection[T]
 }
