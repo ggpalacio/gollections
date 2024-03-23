@@ -6,13 +6,6 @@ type hashSet[T comparable] struct {
 	elements map[T]any
 }
 
-type setIterator[T comparable] struct {
-	set          *hashSet[T]
-	elements     []T
-	currentIndex int
-	removed      bool
-}
-
 func NewSet[T comparable](elements ...T) Set[T] {
 	set := &hashSet[T]{
 		elements: make(map[T]any),
@@ -69,9 +62,9 @@ func (ref *hashSet[T]) IsEmpty() bool {
 }
 
 func (ref *hashSet[T]) Iterator() Iterator[T] {
-	return &setIterator[T]{
-		set:      ref,
-		elements: ref.ToArray(),
+	return &collectionIterator[T]{
+		collection: ref,
+		elements:   ref.ToArray(),
 	}
 }
 
@@ -136,29 +129,4 @@ func (ref *hashSet[T]) ToArray() []T {
 		index++
 	}
 	return array
-}
-
-func (ref *setIterator[T]) HasNext() bool {
-	return ref.currentIndex < len(ref.elements)
-}
-
-func (ref *setIterator[T]) Next() T {
-	if !ref.HasNext() {
-		panic("has no more elements to iterate")
-	}
-	ref.removed = false
-	currentElement := ref.elements[ref.currentIndex]
-	ref.currentIndex++
-	return currentElement
-}
-
-func (ref *setIterator[T]) Remove() {
-	if ref.currentIndex == 0 {
-		panic("next method has not been called")
-	}
-	if ref.removed {
-		panic("remove method has already been called after the last call to the next method")
-	}
-	ref.set.Remove(ref.elements[ref.currentIndex-1])
-	ref.removed = true
 }
