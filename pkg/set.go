@@ -2,6 +2,10 @@ package gollections
 
 var empty any
 
+type Set[T comparable] interface {
+	Collection[T]
+}
+
 type hashSet[T comparable] struct {
 	elements map[T]any
 }

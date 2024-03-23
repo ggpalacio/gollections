@@ -1,5 +1,24 @@
 package gollections
 
+type Collection[T any] interface {
+	Add(element T, elements ...T)
+	AddAll(collection Collection[T])
+	Clear()
+	Contains(element T) bool
+	ContainsAll(collection Collection[T]) bool
+	ContainsAny(collection Collection[T]) bool
+	IsEmpty() bool
+	Iterator() Iterator[T]
+	Remove(element T, elements ...T)
+	RemoveAll(collection Collection[T])
+	RemoveIf(predicate Predicate[T])
+	Retains(element T, elements ...T)
+	RetainsAll(collection Collection[T])
+	RetainsIf(predicate Predicate[T])
+	Size() int
+	ToArray() []T
+}
+
 type collectionIterator[T comparable] struct {
 	collection   Collection[T]
 	elements     []T
