@@ -2,12 +2,12 @@ package gollections
 
 var empty any
 
-type set[T comparable] struct {
+type hashSet[T comparable] struct {
 	elements map[T]any
 }
 
 type setIterator[T comparable] struct {
-	collection     *set[T]
+	set            *hashSet[T]
 	elements       []T
 	currentElement T
 	index          int
@@ -15,38 +15,38 @@ type setIterator[T comparable] struct {
 }
 
 func NewSet[T comparable](elements ...T) Set[T] {
-	collection := &set[T]{
+	set := &hashSet[T]{
 		elements: make(map[T]any),
 	}
 	for _, element := range elements {
-		collection.Add(element)
+		set.Add(element)
 	}
-	return collection
+	return set
 }
 
-func (ref *set[T]) Add(element T, elements ...T) {
+func (ref *hashSet[T]) Add(element T, elements ...T) {
 	ref.elements[element] = empty
 	for _, element := range elements {
 		ref.elements[element] = empty
 	}
 }
 
-func (ref *set[T]) AddAll(collection Collection[T]) {
+func (ref *hashSet[T]) AddAll(collection Collection[T]) {
 	for it := collection.Iterator(); it.HasNext(); {
 		ref.Add(it.Next())
 	}
 }
 
-func (ref *set[T]) Clear() {
+func (ref *hashSet[T]) Clear() {
 	ref.elements = make(map[T]any)
 }
 
-func (ref *set[T]) Contains(element T) bool {
+func (ref *hashSet[T]) Contains(element T) bool {
 	_, found := ref.elements[element]
 	return found
 }
 
-func (ref *set[T]) ContainsAll(collection Collection[T]) bool {
+func (ref *hashSet[T]) ContainsAll(collection Collection[T]) bool {
 	found := 0
 	for element := range ref.elements {
 		if collection.Contains(element) {
@@ -56,7 +56,7 @@ func (ref *set[T]) ContainsAll(collection Collection[T]) bool {
 	return found == collection.Size()
 }
 
-func (ref *set[T]) ContainsAny(collection Collection[T]) bool {
+func (ref *hashSet[T]) ContainsAny(collection Collection[T]) bool {
 	for element := range ref.elements {
 		if collection.Contains(element) {
 			return true
@@ -65,25 +65,25 @@ func (ref *set[T]) ContainsAny(collection Collection[T]) bool {
 	return false
 }
 
-func (ref *set[T]) IsEmpty() bool {
+func (ref *hashSet[T]) IsEmpty() bool {
 	return ref.Size() == 0
 }
 
-func (ref *set[T]) Iterator() Iterator[T] {
+func (ref *hashSet[T]) Iterator() Iterator[T] {
 	return &setIterator[T]{
-		collection: ref,
-		elements:   ref.ToArray(),
+		set:      ref,
+		elements: ref.ToArray(),
 	}
 }
 
-func (ref *set[T]) Remove(element T, elements ...T) {
+func (ref *hashSet[T]) Remove(element T, elements ...T) {
 	delete(ref.elements, element)
 	for _, element := range elements {
 		delete(ref.elements, element)
 	}
 }
 
-func (ref *set[T]) RemoveAll(collection Collection[T]) {
+func (ref *hashSet[T]) RemoveAll(collection Collection[T]) {
 	for element := range ref.elements {
 		if collection.Contains(element) {
 			ref.Remove(element)
@@ -91,7 +91,7 @@ func (ref *set[T]) RemoveAll(collection Collection[T]) {
 	}
 }
 
-func (ref *set[T]) RemoveIf(predicate Predicate[T]) {
+func (ref *hashSet[T]) RemoveIf(predicate Predicate[T]) {
 	for element := range ref.elements {
 		if predicate(element) {
 			ref.Remove(element)
@@ -99,7 +99,7 @@ func (ref *set[T]) RemoveIf(predicate Predicate[T]) {
 	}
 }
 
-func (ref *set[T]) Retains(element T, elements ...T) {
+func (ref *hashSet[T]) Retains(element T, elements ...T) {
 	retainedElements := NewSet[T]()
 	retainedElements.Add(element, elements...)
 	for element := range ref.elements {
@@ -109,7 +109,7 @@ func (ref *set[T]) Retains(element T, elements ...T) {
 	}
 }
 
-func (ref *set[T]) RetainsAll(collection Collection[T]) {
+func (ref *hashSet[T]) RetainsAll(collection Collection[T]) {
 	for element := range ref.elements {
 		if !collection.Contains(element) {
 			ref.Remove(element)
@@ -117,7 +117,7 @@ func (ref *set[T]) RetainsAll(collection Collection[T]) {
 	}
 }
 
-func (ref *set[T]) RetainsIf(predicate Predicate[T]) {
+func (ref *hashSet[T]) RetainsIf(predicate Predicate[T]) {
 	for element := range ref.elements {
 		if !predicate(element) {
 			ref.Remove(element)
@@ -125,11 +125,11 @@ func (ref *set[T]) RetainsIf(predicate Predicate[T]) {
 	}
 }
 
-func (ref *set[T]) Size() int {
+func (ref *hashSet[T]) Size() int {
 	return len(ref.elements)
 }
 
-func (ref *set[T]) ToArray() []T {
+func (ref *hashSet[T]) ToArray() []T {
 	array := make([]T, len(ref.elements))
 	index := 0
 	for element := range ref.elements {
@@ -160,6 +160,6 @@ func (ref *setIterator[T]) Remove() {
 	if ref.removed {
 		panic("remove method has already been called after the last call to the next method")
 	}
-	ref.collection.Remove(ref.currentElement)
+	ref.set.Remove(ref.currentElement)
 	ref.removed = true
 }

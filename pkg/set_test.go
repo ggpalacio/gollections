@@ -8,132 +8,132 @@ import (
 )
 
 func TestSet_Add(t *testing.T) {
-	collection := gollections.NewSet[string]()
-	assertSet(t, collection)
+	set := gollections.NewSet[string]()
+	assertSet(t, set)
 
-	collection.Add("A")
-	assertSet(t, collection, "A")
+	set.Add("A")
+	assertSet(t, set, "A")
 
-	collection.Add("B")
-	assertSet(t, collection, "A", "B")
+	set.Add("B")
+	assertSet(t, set, "A", "B")
 
-	collection.Add("C")
-	assertSet(t, collection, "A", "B", "C")
+	set.Add("C")
+	assertSet(t, set, "A", "B", "C")
 
-	collection.Add("A")
-	assertSet(t, collection, "A", "B", "C")
+	set.Add("A")
+	assertSet(t, set, "A", "B", "C")
 
-	collection.Add("B", "C", "D")
-	assertSet(t, collection, "A", "B", "C", "D")
+	set.Add("B", "C", "D")
+	assertSet(t, set, "A", "B", "C", "D")
 
-	collection.Add("E", "F")
-	assertSet(t, collection, "A", "B", "C", "D", "E", "F")
+	set.Add("E", "F")
+	assertSet(t, set, "A", "B", "C", "D", "E", "F")
 }
 
 func TestSet_AddAll(t *testing.T) {
-	source := gollections.NewSet[string]()
-	target := gollections.NewSet[string]()
-	assertSet(t, source)
-	assertSet(t, target)
+	set1 := gollections.NewSet[string]()
+	set2 := gollections.NewSet[string]()
+	assertSet(t, set1)
+	assertSet(t, set2)
 
-	source.Add("A", "B", "C")
-	assertSet(t, source, "A", "B", "C")
-	assertSet(t, target)
+	set1.Add("A", "B", "C")
+	assertSet(t, set1, "A", "B", "C")
+	assertSet(t, set2)
 
-	target.AddAll(source)
-	assertSet(t, source, "A", "B", "C")
-	assertSet(t, target, "A", "B", "C")
+	set2.AddAll(set1)
+	assertSet(t, set1, "A", "B", "C")
+	assertSet(t, set2, "A", "B", "C")
 
-	source.Clear()
-	assertSet(t, source)
-	assertSet(t, target, "A", "B", "C")
+	set1.Clear()
+	assertSet(t, set1)
+	assertSet(t, set2, "A", "B", "C")
 }
 
 func TestSet_Clear(t *testing.T) {
-	collection := gollections.NewSet[string]()
-	assertSet(t, collection)
+	set := gollections.NewSet[string]()
+	assertSet(t, set)
 
-	collection.Add("A", "B", "C")
-	assertSet(t, collection, "A", "B", "C")
+	set.Add("A", "B", "C")
+	assertSet(t, set, "A", "B", "C")
 
-	collection.Clear()
-	assertSet(t, collection)
+	set.Clear()
+	assertSet(t, set)
 }
 
 func TestSet_Contains(t *testing.T) {
-	collection := gollections.NewSet[string]()
-	collection.Add("A", "B", "C")
-	assert.True(t, collection.Contains("A"))
-	assert.True(t, collection.Contains("B"))
-	assert.True(t, collection.Contains("C"))
-	assert.False(t, collection.Contains("D"))
-	assert.False(t, collection.Contains("E"))
+	set := gollections.NewSet[string]()
+	set.Add("A", "B", "C")
+	assert.True(t, set.Contains("A"))
+	assert.True(t, set.Contains("B"))
+	assert.True(t, set.Contains("C"))
+	assert.False(t, set.Contains("D"))
+	assert.False(t, set.Contains("E"))
 }
 
 func TestSet_ContainsAll(t *testing.T) {
-	collection := gollections.NewSet("A", "B", "C")
-	assert.True(t, collection.ContainsAll(gollections.NewSet("A")))
-	assert.True(t, collection.ContainsAll(gollections.NewSet("A", "B")))
-	assert.True(t, collection.ContainsAll(gollections.NewSet("A", "B", "C")))
-	assert.False(t, collection.ContainsAll(gollections.NewSet("A", "B", "C", "D")))
-	assert.False(t, collection.ContainsAll(gollections.NewSet("A", "B", "C", "D", "E")))
+	set := gollections.NewSet("A", "B", "C")
+	assert.True(t, set.ContainsAll(gollections.NewSet("A")))
+	assert.True(t, set.ContainsAll(gollections.NewSet("A", "B")))
+	assert.True(t, set.ContainsAll(gollections.NewSet("A", "B", "C")))
+	assert.False(t, set.ContainsAll(gollections.NewSet("A", "B", "C", "D")))
+	assert.False(t, set.ContainsAll(gollections.NewSet("A", "B", "C", "D", "E")))
 }
 
 func TestSet_ContainsAny(t *testing.T) {
-	collection := gollections.NewSet("D", "E")
-	assert.False(t, collection.ContainsAny(gollections.NewSet("A")))
-	assert.False(t, collection.ContainsAny(gollections.NewSet("A", "B")))
-	assert.False(t, collection.ContainsAny(gollections.NewSet("A", "B", "C")))
-	assert.True(t, collection.ContainsAny(gollections.NewSet("A", "B", "C", "D")))
-	assert.True(t, collection.ContainsAny(gollections.NewSet("A", "B", "C", "D", "E")))
+	set := gollections.NewSet("D", "E")
+	assert.False(t, set.ContainsAny(gollections.NewSet("A")))
+	assert.False(t, set.ContainsAny(gollections.NewSet("A", "B")))
+	assert.False(t, set.ContainsAny(gollections.NewSet("A", "B", "C")))
+	assert.True(t, set.ContainsAny(gollections.NewSet("A", "B", "C", "D")))
+	assert.True(t, set.ContainsAny(gollections.NewSet("A", "B", "C", "D", "E")))
 }
 
 func TestSet_IsEmpty(t *testing.T) {
-	collection := gollections.NewSet[string]()
-	assert.True(t, collection.IsEmpty())
+	set := gollections.NewSet[string]()
+	assert.True(t, set.IsEmpty())
 
-	collection.Add("X")
-	assert.False(t, collection.IsEmpty())
+	set.Add("X")
+	assert.False(t, set.IsEmpty())
 
-	collection.Remove("X")
-	assert.True(t, collection.IsEmpty())
+	set.Remove("X")
+	assert.True(t, set.IsEmpty())
 }
 
 func TestSet_Iterator(t *testing.T) {
 	elements := []string{"A", "B", "C", "D", "E"}
-	collection := gollections.NewSet(elements...)
+	set := gollections.NewSet(elements...)
 
-	for it := collection.Iterator(); it.HasNext(); {
+	for it := set.Iterator(); it.HasNext(); {
 		assert.Contains(t, elements, it.Next())
 	}
-	assertSet(t, collection, "A", "B", "C", "D", "E")
+	assertSet(t, set, "A", "B", "C", "D", "E")
 
-	for it := collection.Iterator(); it.HasNext(); {
+	for it := set.Iterator(); it.HasNext(); {
 		it.Next()
 		it.Remove()
 	}
-	assertSet(t, collection)
+	assertSet(t, set)
 }
 
 func TestSet_Iterator_NoSuchElement(t *testing.T) {
-	collection := gollections.NewSet[string]()
-	it := collection.Iterator()
+	set := gollections.NewSet[string]()
+	it := set.Iterator()
 	assert.PanicsWithValue(t, "has no more elements to iterate", func() {
 		it.Next()
 	})
 }
 
 func TestSet_Iterator_RemoveWithoutCallNext(t *testing.T) {
-	collection := gollections.NewSet[string]()
-	it := collection.Iterator()
+	set := gollections.NewSet[string]()
+	it := set.Iterator()
 	assert.PanicsWithValue(t, "next method has not been called", func() {
 		it.Remove()
 	})
 }
 
 func TestSet_Iterator_RemoveCalledTwice(t *testing.T) {
-	collection := gollections.NewSet("X")
-	it := collection.Iterator()
+	set := gollections.NewSet("X")
+	it := set.Iterator()
 	it.Next()
 	it.Remove()
 	assert.PanicsWithValue(t, "remove method has already been called after the last call to the next method", func() {
@@ -142,118 +142,118 @@ func TestSet_Iterator_RemoveCalledTwice(t *testing.T) {
 }
 
 func TestSet_Remove(t *testing.T) {
-	collection := gollections.NewSet("A", "B", "C", "D", "E")
-	assertSet(t, collection, "A", "B", "C", "D", "E")
+	set := gollections.NewSet("A", "B", "C", "D", "E")
+	assertSet(t, set, "A", "B", "C", "D", "E")
 
-	collection.Remove("C")
-	assertSet(t, collection, "A", "B", "D", "E")
+	set.Remove("C")
+	assertSet(t, set, "A", "B", "D", "E")
 
-	collection.Remove("B", "D", "E")
-	assertSet(t, collection, "A")
+	set.Remove("B", "D", "E")
+	assertSet(t, set, "A")
 
-	collection.Remove("A")
-	assertSet(t, collection)
+	set.Remove("A")
+	assertSet(t, set)
 }
 
 func TestSet_RemoveAll(t *testing.T) {
-	collection := gollections.NewSet("A", "B", "C", "D", "E")
-	assertSet(t, collection, "A", "B", "C", "D", "E")
+	set := gollections.NewSet("A", "B", "C", "D", "E")
+	assertSet(t, set, "A", "B", "C", "D", "E")
 
-	collection.RemoveAll(gollections.NewSet("A", "C", "E"))
-	assertSet(t, collection, "B", "D")
+	set.RemoveAll(gollections.NewSet("A", "C", "E"))
+	assertSet(t, set, "B", "D")
 
-	collection.RemoveAll(gollections.NewSet("A", "B", "C"))
-	assertSet(t, collection, "D")
+	set.RemoveAll(gollections.NewSet("A", "B", "C"))
+	assertSet(t, set, "D")
 
-	collection.RemoveAll(gollections.NewSet("D", "E"))
-	assertSet(t, collection)
+	set.RemoveAll(gollections.NewSet("D", "E"))
+	assertSet(t, set)
 }
 
 func TestSet_RemoveIf(t *testing.T) {
-	collection := gollections.NewSet(1, 2, 3, 4, 5, 6, 7, 8)
-	assertSet(t, collection, 1, 2, 3, 4, 5, 6, 7, 8)
+	set := gollections.NewSet(1, 2, 3, 4, 5, 6, 7, 8)
+	assertSet(t, set, 1, 2, 3, 4, 5, 6, 7, 8)
 
-	collection.RemoveIf(func(element int) bool {
+	set.RemoveIf(func(element int) bool {
 		return element%2 != 0
 	})
-	assertSet(t, collection, 2, 4, 6, 8)
+	assertSet(t, set, 2, 4, 6, 8)
 
-	collection.RemoveIf(func(element int) bool {
+	set.RemoveIf(func(element int) bool {
 		return element%4 == 0
 	})
-	assertSet(t, collection, 2, 6)
+	assertSet(t, set, 2, 6)
 }
 
 func TestSet_Rentains(t *testing.T) {
-	collection := gollections.NewSet("A", "B", "C", "D", "E")
-	assertSet(t, collection, "A", "B", "C", "D", "E")
+	set := gollections.NewSet("A", "B", "C", "D", "E")
+	assertSet(t, set, "A", "B", "C", "D", "E")
 
-	collection.Retains("A", "B", "C")
-	assertSet(t, collection, "A", "B", "C")
+	set.Retains("A", "B", "C")
+	assertSet(t, set, "A", "B", "C")
 
-	collection.Retains("B")
-	assertSet(t, collection, "B")
+	set.Retains("B")
+	assertSet(t, set, "B")
 }
 
 func TestSet_RentainsAll(t *testing.T) {
-	collection := gollections.NewSet("A", "B", "C", "D", "E")
-	assertSet(t, collection, "A", "B", "C", "D", "E")
+	set := gollections.NewSet("A", "B", "C", "D", "E")
+	assertSet(t, set, "A", "B", "C", "D", "E")
 
-	collection.RetainsAll(gollections.NewSet("A", "B", "C"))
-	assertSet(t, collection, "A", "B", "C")
+	set.RetainsAll(gollections.NewSet("A", "B", "C"))
+	assertSet(t, set, "A", "B", "C")
 
-	collection.RetainsAll(gollections.NewSet[string]())
-	assertSet(t, collection)
+	set.RetainsAll(gollections.NewSet[string]())
+	assertSet(t, set)
 }
 
 func TestSet_RentainsIf(t *testing.T) {
-	collection := gollections.NewSet(1, 2, 3, 4, 5, 6, 7, 8)
-	assertSet(t, collection, 1, 2, 3, 4, 5, 6, 7, 8)
+	set := gollections.NewSet(1, 2, 3, 4, 5, 6, 7, 8)
+	assertSet(t, set, 1, 2, 3, 4, 5, 6, 7, 8)
 
-	collection.RetainsIf(func(element int) bool {
+	set.RetainsIf(func(element int) bool {
 		return element%2 == 0
 	})
-	assertSet(t, collection, 2, 4, 6, 8)
+	assertSet(t, set, 2, 4, 6, 8)
 
-	collection.RetainsIf(func(element int) bool {
+	set.RetainsIf(func(element int) bool {
 		return element%4 != 0
 	})
-	assertSet(t, collection, 2, 6)
+	assertSet(t, set, 2, 6)
 }
 
 func TestSet_Size(t *testing.T) {
-	collection := gollections.NewSet[string]()
-	assert.Zero(t, collection.Size())
+	set := gollections.NewSet[string]()
+	assert.Zero(t, set.Size())
 
-	collection.Add("A")
-	assert.Equal(t, 1, collection.Size())
+	set.Add("A")
+	assert.Equal(t, 1, set.Size())
 
-	collection.Add("B")
-	assert.Equal(t, 2, collection.Size())
+	set.Add("B")
+	assert.Equal(t, 2, set.Size())
 
-	collection.Add("C", "D")
-	assert.Equal(t, 4, collection.Size())
+	set.Add("C", "D")
+	assert.Equal(t, 4, set.Size())
 
-	collection.Remove("C")
-	assert.Equal(t, 3, collection.Size())
+	set.Remove("C")
+	assert.Equal(t, 3, set.Size())
 
-	collection.Remove("D", "A", "B")
-	assert.Zero(t, collection.Size())
+	set.Remove("D", "A", "B")
+	assert.Zero(t, set.Size())
 }
 
 func TestSet_ToArray(t *testing.T) {
 	elements := []string{"A", "B", "C", "D", "E"}
-	collection := gollections.NewSet(elements...)
-	assert.ElementsMatch(t, elements, collection.ToArray())
+	set := gollections.NewSet(elements...)
+	assert.ElementsMatch(t, elements, set.ToArray())
 }
 
-func assertSet[T comparable](t *testing.T, collection gollections.Set[T], elements ...T) {
+func assertSet[T comparable](t *testing.T, set gollections.Set[T], elements ...T) {
 	if len(elements) == 0 {
-		assert.Zero(t, collection.Size())
-		assert.True(t, collection.IsEmpty())
+		assert.Zero(t, set.Size())
+		assert.True(t, set.IsEmpty())
 	} else {
-		assert.ElementsMatch(t, elements, collection.ToArray())
-		assert.Equal(t, len(elements), collection.Size())
-		assert.False(t, collection.IsEmpty())
+		assert.ElementsMatch(t, elements, set.ToArray())
+		assert.Equal(t, len(elements), set.Size())
+		assert.False(t, set.IsEmpty())
 	}
 }
