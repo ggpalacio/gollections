@@ -4,6 +4,7 @@ var empty any
 
 type Set[T comparable] interface {
 	Collection[T]
+	ToBag() Bag[T]
 }
 
 type hashSet[T comparable] struct {
@@ -44,17 +45,18 @@ func (ref *hashSet[T]) Contains(element T) bool {
 
 func (ref *hashSet[T]) ContainsAll(collection Collection[T]) bool {
 	found := 0
-	for element := range ref.elements {
-		if collection.Contains(element) {
-			found++
+	for it := collection.Iterator(); it.HasNext(); {
+		if !ref.Contains(it.Next()) {
+			return false
 		}
+		found++
 	}
 	return found == collection.Size()
 }
 
 func (ref *hashSet[T]) ContainsAny(collection Collection[T]) bool {
-	for element := range ref.elements {
-		if collection.Contains(element) {
+	for it := collection.Iterator(); it.HasNext(); {
+		if ref.Contains(it.Next()) {
 			return true
 		}
 	}
@@ -80,8 +82,9 @@ func (ref *hashSet[T]) Remove(element T, elements ...T) {
 }
 
 func (ref *hashSet[T]) RemoveAll(collection Collection[T]) {
-	for element := range ref.elements {
-		if collection.Contains(element) {
+	for it := collection.Iterator(); it.HasNext(); {
+		element := it.Next()
+		if ref.Contains(element) {
 			ref.Remove(element)
 		}
 	}
@@ -133,4 +136,8 @@ func (ref *hashSet[T]) ToArray() []T {
 		index++
 	}
 	return array
+}
+
+func (ref *hashSet[T]) ToBag() Bag[T] {
+	return NewBag(ref.ToArray()...)
 }

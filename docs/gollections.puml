@@ -69,15 +69,22 @@ class Queue<T any> implements Collection {
     Enqueue(element T)
 }
 
-class Set<T any> implements Collection
+interface Set<T any> extends Collection {
+    ToBag() Bag<T>
+}
 
-class Bag<T any> implements Collection {
-    AddN(element T, n int)
+interface Bag<T any> extends Collection {
+    AddMany(element T, count int)
     Count(element T) int
-    RemoveEvery(element T)
-    RemoveN(element T, n int)
+    RemoveEvery(element T, elements ...T)
+    RemoveMany(element T, count int)
+    Set(element T, count int)
     ToSet() Set<T>
 }
+
+class hashSet<T any> implements Set {}
+
+class hashBag<T any> implements Bag {}
 
 Collection *-- Iterator
 Collection *-- Predicate
